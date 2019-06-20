@@ -19,7 +19,6 @@ export class Login extends Component {
         setToken('neverlogin');
         window.location.reload()
     }
-
     render() {
         return (
             <div className="login">

@@ -29,7 +29,7 @@ export class Tuijian extends Component {
         console.log(result)
     }
     async onLeftClick() {
-        this.props.history.goBack()
+        this.props.history.push({ pathname: '/find' })
         await store.dispatch({
             type: 'Logged',
             payload: {
@@ -38,7 +38,6 @@ export class Tuijian extends Component {
         })
     }
     ToDetail(id) {
-
         this.props.history.push({ pathname: `/songlistdetail/${id}` })
     }
     render() {

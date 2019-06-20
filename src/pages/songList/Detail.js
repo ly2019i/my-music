@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import store from "../../Store";
 import { getSongListDetail, getMusicUrl } from "../../serveices/getTuijian";
 import { NavBar, Icon, List } from 'antd-mobile';
+import MusicPlayer from "./musicPlayer";
 
 const Item = List.Item;
 export class songListDetail extends Component {
@@ -11,6 +12,8 @@ export class songListDetail extends Component {
             songListDetail: {},
             tracks: [],
             mp3url: [],
+            allUrl: [],
+            id: '',
         }
     }
     async componentDidMount() {
@@ -34,17 +37,30 @@ export class songListDetail extends Component {
         this.state.tracks.forEach(item => mp3id += item.id + ",");
         mp3id = mp3id.substr(0, mp3id.length - 1);
         const result = await getMusicUrl(mp3id);
-        console.log(result)
+        var urlArr = [];
+        for (var i in result.data.data) {
+            urlArr.push(result.data.data[i].url)
+        }
+        this.setState({
+            allUrl: urlArr
+        })
+        console.log(this.state.allUrl)
     }
     async playSong(id) {
         const result = await getMusicUrl(id)
-        console.log(result)
         await this.setState({
-            mp3url: result.data.data
+            mp3url: result.data.data,
+            id: id
+        })
+        await store.dispatch({
+            type: 'getMusicId',
+            payload: {
+                id: id
+            }
         })
     }
     render() {
-        const { songListDetail, tracks, mp3url } = this.state;
+        const { songListDetail, tracks, mp3url, allUrl, id } = this.state;
         return (
             <div>
                 <NavBar
@@ -94,9 +110,10 @@ export class songListDetail extends Component {
                             </List>
                         </div>
                         <div className="musicPlay">
-                            {mp3url.map(item => {
-                                return <audio key={item.id} controls="controls" autoPlay="autoplay" src={item.url}></audio>
-                            })}
+                            {/* {mp3url.map(item => {
+                                return <audio key={item.id} controls="controls" autoPlay="autoplay" loop src={item.url}></audio>
+                            })} */}
+                            <MusicPlayer></MusicPlayer>
                         </div>
                     </div>
                 </div>
