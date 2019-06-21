@@ -25,6 +25,11 @@ export function getCatlist() {
 export function getMusicUrl(id) {
     return get(serveUrl + `/song/url?id=${id}`)
 }
+//  登录
 export function login(data) {
     return get(`${serveUrl}/login/cellphone?phone=${data.phone}&password=${data.password}`);
+}
+//  根据id获取用户详情  443315299
+export function getUserInfo(id) {
+    return get(`${serveUrl}/user/detail?uid=${id}`)
 }

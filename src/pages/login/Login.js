@@ -17,6 +17,7 @@ export class Login extends Component {
     tiyan() {
         console.log(this.props)
         setToken('neverlogin');
+        this.props.history.push({ pathname: '/' })
         window.location.reload()
     }
     render() {

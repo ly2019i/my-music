@@ -36,14 +36,13 @@ export class songListDetail extends Component {
     }
     async playAll() {
         //  获取所有的歌曲id
-        var mp3id = '';
         var datas = [];
         this.state.tracks.forEach((item, index) => {
             datas[index] = {};
             datas[index].al = item.al;
-            datas[index].id = item.id
+            datas[index].id = item.id;
+            datas[index].name = item.name
         });
-        mp3id = mp3id.substr(0, mp3id.length - 1);
         //  根据id获取歌曲url
         // const result = await getMusicUrl(mp3id);
         // var urlArr = [];
@@ -69,7 +68,7 @@ export class songListDetail extends Component {
         console.log(result)
     }
     render() {
-        const { songListDetail, tracks, datas, allUrl, id } = this.state;
+        const { songListDetail, tracks, datas } = this.state;
         return (
             <div>
                 <NavBar
