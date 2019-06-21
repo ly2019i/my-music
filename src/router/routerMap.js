@@ -4,6 +4,7 @@ import Friend from '../pages/Friend';
 import Video from '../pages/Video';
 import Tuijian from "../pages/songList/Tuijian";
 import songListDetail from "../pages/songList/Detail";
+import CatList from "../pages/songList/CatList";
 // import Login from '../pages/login/Login';
 // import LoginByPhone from "../pages/login/LoginByPhone";
 
@@ -16,4 +17,5 @@ export default [
     { path: "/video", component: Video, name: 'Video' },
     { path: "/tuijian", component: Tuijian, name: 'Tuijian' },
     { path: "/songlistdetail/:id", component: songListDetail, name: 'songListDetail' },
+    { path: "/catlist", component: CatList, name: 'CatList' },
 ]

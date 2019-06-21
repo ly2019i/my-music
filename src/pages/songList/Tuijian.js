@@ -27,6 +27,7 @@ export class Tuijian extends Component {
     async loadCatList() {
         const result = await getCatlist();
         console.log(result)
+        this.props.history.push({ pathname: '/catlist' })
     }
     async onLeftClick() {
         this.props.history.push({ pathname: '/find' })

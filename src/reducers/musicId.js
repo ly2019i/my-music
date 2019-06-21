@@ -1,5 +1,4 @@
-export default function getMusicIdReducer(state = { id: '' }, action) {
-    console.log(action.payload)
+export default function getMusicIdReducer(state = { data: {} }, action) {
     switch (action.type) {
         case 'getMusicId':
             return { ...state, ...action.payload };

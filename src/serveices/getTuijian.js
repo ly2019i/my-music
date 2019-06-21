@@ -9,6 +9,10 @@ export function getTuijian() {
 export function getSongList() {
     return get(serveUrl + "/top/playlist")
 }
+//  搜索
+export function searchSongList(keywords) {
+    return get(serveUrl + `/search?keywords=${keywords}`)
+}
 //  获取歌单详情
 export function getSongListDetail(id) {
     return get(serveUrl + `/playlist/detail?id=${id}`)

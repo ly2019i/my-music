@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import store from "../../Store";
-import { getSongListDetail, getMusicUrl } from "../../serveices/getTuijian";
+import { getSongListDetail, getMusicUrl, searchSongList } from "../../serveices/getTuijian";
 import { NavBar, Icon, List } from 'antd-mobile';
 import MusicPlayer from "./musicPlayer";
 
@@ -14,15 +14,18 @@ export class songListDetail extends Component {
             mp3url: [],
             allUrl: [],
             id: '',
+            datas: [],
         }
     }
     async componentDidMount() {
+        // 派发事件改变头部和底部的状态
         await store.dispatch({
             type: 'Logged',
             payload: {
                 display: 'none'
             }
         })
+        //  根据传过来的id获取歌单详细信息并赋值到state
         const result = await getSongListDetail(this.props.match.params.id);
         await this.setState({
             songListDetail: result.data.playlist,
@@ -30,37 +33,43 @@ export class songListDetail extends Component {
         })
         console.log(this.props, "详情页")
         console.log(this.state.songListDetail)
-        console.log(this.state.tracks)
     }
     async playAll() {
+        //  获取所有的歌曲id
         var mp3id = '';
-        this.state.tracks.forEach(item => mp3id += item.id + ",");
+        var datas = [];
+        this.state.tracks.forEach((item, index) => {
+            datas[index] = {};
+            datas[index].al = item.al;
+            datas[index].id = item.id
+        });
         mp3id = mp3id.substr(0, mp3id.length - 1);
-        const result = await getMusicUrl(mp3id);
-        var urlArr = [];
-        for (var i in result.data.data) {
-            urlArr.push(result.data.data[i].url)
-        }
-        this.setState({
-            allUrl: urlArr
-        })
-        console.log(this.state.allUrl)
-    }
-    async playSong(id) {
-        const result = await getMusicUrl(id)
+        //  根据id获取歌曲url
+        // const result = await getMusicUrl(mp3id);
+        // var urlArr = [];
+        // for (var i in result.data.data) {
+        //     urlArr.push(result.data.data[i].url)
+        // }
         await this.setState({
-            mp3url: result.data.data,
-            id: id
+            datas: datas
         })
+        console.log(this.state.datas)
+    }
+    async playSong(data) {
+        //  向musicPlayer组件派发歌曲信息
         await store.dispatch({
             type: 'getMusicId',
             payload: {
-                id: id
+                data,
             }
         })
     }
+    async search() {
+        const result = await searchSongList();
+        console.log(result)
+    }
     render() {
-        const { songListDetail, tracks, mp3url, allUrl, id } = this.state;
+        const { songListDetail, tracks, datas, allUrl, id } = this.state;
         return (
             <div>
                 <NavBar
@@ -68,7 +77,7 @@ export class songListDetail extends Component {
                     icon={<Icon type="left" />}
                     onLeftClick={() => this.props.history.push({ pathname: '/tuijian' })}
                     rightContent={[
-                        <Icon key="0" type="search" style={{ marginRight: '16px' }} />,
+                        <Icon key="0" type="search" style={{ marginRight: '16px' }} onClick={() => this.search()} />,
                         <Icon key="1" type="ellipsis" />,
                     ]}
                 >歌单</NavBar>
@@ -85,7 +94,6 @@ export class songListDetail extends Component {
                                 <span style={{ float: 'right' }}><Icon type="right" /></span>
                             </div>
                         </div>
-
                         <div className="handle">
                             <ul>
                                 <li><p>评论</p>{songListDetail.commentCount}</li>
@@ -98,7 +106,8 @@ export class songListDetail extends Component {
                             <List className="my-list">
                                 <Item onClick={() => this.playAll()} extra={`+ 收藏(${songListDetail.subscribedCount})`}>播放全部</Item>
                                 {tracks.map(item => {
-                                    return <Item onClick={() => this.playSong(item.id)} extra={<span>
+                                    var data = { id: item.id, name: item.name, picUrl: item.al.picUrl }
+                                    return <Item onClick={() => this.playSong(data)} extra={<span>
                                         {/* <i style={{ display: 'block', border: '1px solid #cecece', float: 'left', width: '0.5rem', height: '0.5rem', borderRadius: '50%', position: 'relative', overflow: 'auto' }}>
                                             <Icon type="right" style={{ position: 'absolute', top: '0.02rem', left: 0 }} />
                                         </i> */}
@@ -113,7 +122,7 @@ export class songListDetail extends Component {
                             {/* {mp3url.map(item => {
                                 return <audio key={item.id} controls="controls" autoPlay="autoplay" loop src={item.url}></audio>
                             })} */}
-                            <MusicPlayer></MusicPlayer>
+                            <MusicPlayer datas={datas}></MusicPlayer>
                         </div>
                     </div>
                 </div>
