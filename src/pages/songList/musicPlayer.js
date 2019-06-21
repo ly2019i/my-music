@@ -78,7 +78,6 @@ export class musicPlayer extends Component {
         }
     }
     TimeSpanFun = async (refs) => {
-        var ProcessNow = 0;
         this.TimeSpan = setInterval(async () => {
             var audio = refs;
             //  进度条

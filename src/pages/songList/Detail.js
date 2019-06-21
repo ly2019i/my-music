@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import store from "../../Store";
-import { getSongListDetail, getMusicUrl, searchSongList } from "../../serveices/getTuijian";
+import { getSongListDetail, searchSongList } from "../../serveices/getTuijian";
 import { NavBar, Icon, List } from 'antd-mobile';
 import MusicPlayer from "./musicPlayer";
 
@@ -43,12 +43,6 @@ export class songListDetail extends Component {
             datas[index].id = item.id;
             datas[index].name = item.name
         });
-        //  根据id获取歌曲url
-        // const result = await getMusicUrl(mp3id);
-        // var urlArr = [];
-        // for (var i in result.data.data) {
-        //     urlArr.push(result.data.data[i].url)
-        // }
         await this.setState({
             datas: datas
         })
