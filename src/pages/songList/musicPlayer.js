@@ -6,14 +6,14 @@ export class musicPlayer extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            mp3url: [],
+            mp3url: '',
             id: '',
             fen: 0,
             miao: 0,
             minute: 0,
             second: 0,
-            nowUrl: '',
             index: 0,
+            data: {},
         }
     }
     async playSong(id) {
@@ -27,28 +27,24 @@ export class musicPlayer extends Component {
     async componentWillReceiveProps(nextProps) {
         if (nextProps.datas.length !== 0) {
             console.log(nextProps)
-            this.getUrl(nextProps.datas[this.state.index].id)
-            this.refs.playAll.addEventListener('ended', () => {
+            this.startPlay(nextProps.datas[this.state.index].id)
+            await this.setState({
+                data: nextProps.datas[this.state.index].al,
+                index: this.state.index += 1,
+            })
+            //  监听上一首歌播放完毕
+            this.refs.playOne.onended = async () => {
                 console.log(this.state.index)
-                this.getUrl(nextProps.datas[this.state.index].id)
-            }, false);
-            this.pause()
-            this.clearTimer()
-            this.TimeSpanFun(this.refs.playAll)
-            this.showVoiceLength(this.state.nowUrl, this.refs.playAll)
+                this.startPlay(nextProps.datas[this.state.index].id)
+                await this.setState({
+                    data: nextProps.datas[this.state.index].al,
+                    index: this.state.index += 1,
+                })
+            };
         }
-    }
-    async getUrl(id) {
-        const result = await getMusicUrl(id);
-        var nowUrl = result.data.data[0].url;
-        await this.setState({
-            nowUrl: nowUrl,
-            index: this.state.index += 1
-        })
     }
     async componentDidUpdate(prevState) {
         if (this.props.data !== prevState.data) {
-            console.log(this.props)
             //  切歌的时候如果当前的秒数不为0就重置为0
             if (this.state.second !== 0) {
                 await this.setState({
@@ -57,12 +53,17 @@ export class musicPlayer extends Component {
                     index: 0,
                 })
             }
-            this.refs.playAll.pause()
-            this.clearTimer();
-            this.playSong(this.props.data.id)
-            this.showVoiceLength(this.state.mp3url, this.refs.playOne)
-            this.TimeSpanFun(this.refs.playOne)
+            await this.setState({
+                data: this.props.data
+            })
+            this.startPlay(this.props.data.id)
         }
+    }
+    startPlay(id) {
+        this.clearTimer();
+        this.playSong(id)
+        this.showVoiceLength(this.state.mp3url, this.refs.playOne)
+        this.TimeSpanFun(this.refs.playOne)
     }
     componentWillUnmount() {
         this.clearTimer()
@@ -125,7 +126,7 @@ export class musicPlayer extends Component {
         this.TimeSpanFun(this.refs.playOne)
     }
     render() {
-        const { data } = this.props;
+        const { data } = this.state;
         var { minute, second, fen, miao } = this.state;
         minute = minute >= 10 ? minute : "0" + minute;
         second = second >= 10 ? second : "0" + second;
@@ -137,8 +138,7 @@ export class musicPlayer extends Component {
                 <img src={data.picUrl} alt={this.name} style={{ width: '0.8rem' }} />
                 <i onClick={() => this.play()}>播放</i>
                 <i onClick={() => this.pause()}> 暂停</i>
-                <audio ref="playAll" autoPlay="autoplay" src={this.state.nowUrl}></audio>
-                <audio ref="playOne" autoPlay="autoplay" loop src={this.state.mp3url}></audio>
+                <audio ref="playOne" autoPlay="autoplay" src={this.state.mp3url}></audio>
                 <div className="Process" ref="Process">
                     <div className="ProcessAll" ref="ProcessAll"></div>
                     <div className="ProcessNow" ref="ProcessNow"></div>
