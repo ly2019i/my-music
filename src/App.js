@@ -13,10 +13,6 @@ import AuthRouter from "./components/AuthRouter";
 const Auth = AuthRouter(Route);
 
 class App extends Component {
-  constructor(props) {
-    super(props);
-    console.log(props)
-  }
   render() {
     const style1 = { display: this.props.display }
     return (

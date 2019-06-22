@@ -20,9 +20,9 @@ export class Login extends Component {
                     console.log(result)
                     setToken('token');
                     Toast.success('登录成功')
-                    // this.props.history.push({
-                    //     pathname: '/'
-                    // })
+                    this.props.history.push({
+                        pathname: '/'
+                    })
                     // window.location.reload();
                 } catch (error) {
                     if (error.response) {
