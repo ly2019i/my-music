@@ -11,7 +11,7 @@ export class Login extends Component {
         await changeFooterToNone();
     }
     async tiyan() {
-        setToken('neverlogin');
+        setToken('token', 'neverlogin', { expires: 7 });
         this.props.history.push({ pathname: '/' })
         await changeToBlock();
         await changeFooterToBlock();

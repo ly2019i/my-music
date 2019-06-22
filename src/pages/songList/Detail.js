@@ -1,8 +1,7 @@
 import React, { Component } from 'react'
 import store from "../../Store";
-import { getSongListDetail, searchSongList } from "../../serveices/getTuijian";
+import { getSongListDetail } from "../../serveices/getTuijian";
 import { NavBar, Icon, List } from 'antd-mobile';
-import MusicPlayer from "./musicPlayer";
 
 const Item = List.Item;
 export class songListDetail extends Component {
@@ -52,7 +51,6 @@ export class songListDetail extends Component {
                 datas: this.state.datas
             }
         })
-        console.log('派发了')
     }
     async playSong(data) {
         //  向musicPlayer组件派发歌曲信息
@@ -71,8 +69,10 @@ export class songListDetail extends Component {
             }
         })
     }
-    async search() {
-        const result = await searchSongList();
+    search() {
+        this.props.history.push({
+            pathname: '/search'
+        })
     }
     render() {
         const { songListDetail, tracks } = this.state;

@@ -167,7 +167,7 @@ export class musicPlayer extends Component {
         }
     }
     render() {
-        const { datas, index, name, data } = this.state;
+        const { name, data } = this.state;
         var { minute, second, fen, miao } = this.state;
         minute = minute >= 10 ? minute : "0" + minute;
         second = second >= 10 ? second : "0" + second;

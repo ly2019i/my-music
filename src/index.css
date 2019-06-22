@@ -243,3 +243,6 @@ body {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+.searchHeader {
+  position: relative;
+}
