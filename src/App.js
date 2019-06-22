@@ -14,7 +14,8 @@ const Auth = AuthRouter(Route);
 
 class App extends Component {
   render() {
-    const style1 = { display: this.props.display }
+    const style1 = { display: this.props.LoggedReducer.display, zIndex: 1 }
+    const style2 = { display: this.props.FooterDisplayReducer.display, zIndex: 1 }
     return (
       <Router>
         <div className="App">
@@ -31,7 +32,7 @@ class App extends Component {
               <Route component={PNF}></Route>
             </Switch>
           </div>
-          <div style={style1}>
+          <div style={style2}>
             <Footer ></Footer>
           </div>
         </div>
@@ -40,4 +41,4 @@ class App extends Component {
 
   }
 }
-export default connect(state => state.LoggedReducer)(App);
+export default connect(state => state)(App);

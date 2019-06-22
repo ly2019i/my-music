@@ -46,23 +46,36 @@ export class songListDetail extends Component {
         await this.setState({
             datas: datas
         })
-        console.log(this.state.datas)
+        await store.dispatch({
+            type: 'getMusicId',
+            payload: {
+                datas: this.state.datas
+            }
+        })
+        console.log('派发了')
     }
     async playSong(data) {
         //  向musicPlayer组件派发歌曲信息
+        var datas = [];
+        this.state.tracks.forEach((item, index) => {
+            datas[index] = {};
+            datas[index].al = item.al;
+            datas[index].id = item.id;
+            datas[index].name = item.name
+        });
         await store.dispatch({
             type: 'getMusicId',
             payload: {
                 data,
+                datas: datas
             }
         })
     }
     async search() {
         const result = await searchSongList();
-        console.log(result)
     }
     render() {
-        const { songListDetail, tracks, datas } = this.state;
+        const { songListDetail, tracks } = this.state;
         return (
             <div>
                 <NavBar
@@ -115,7 +128,6 @@ export class songListDetail extends Component {
                             {/* {mp3url.map(item => {
                                 return <audio key={item.id} controls="controls" autoPlay="autoplay" loop src={item.url}></audio>
                             })} */}
-                            <MusicPlayer datas={datas}></MusicPlayer>
                         </div>
                     </div>
                 </div>

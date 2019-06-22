@@ -3,22 +3,18 @@ import { connect } from 'react-redux';
 import { Link } from "react-router-dom";
 import imgUrl from "../../static/music.png";
 import { setToken } from "../../utils/auth";
-import store from '../../Store';
+import { changeToBlock, changeToNone, changeFooterToNone, changeFooterToBlock } from "../../actions/changeDisplay";
 
 export class Login extends Component {
     async componentDidMount() {
-        await store.dispatch({
-            type: 'Logged',
-            payload: {
-                display: 'none'
-            }
-        })
+        await changeToNone();
+        await changeFooterToNone();
     }
-    tiyan() {
-        console.log(this.props)
+    async tiyan() {
         setToken('neverlogin');
         this.props.history.push({ pathname: '/' })
-        window.location.reload()
+        await changeToBlock();
+        await changeFooterToBlock();
     }
     render() {
         return (

@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import { List, InputItem, Toast } from 'antd-mobile';
 import { setToken } from "../../utils/auth";
 import { login } from '../../serveices/getTuijian';
 import { regPhone } from "../../utils/reg";
+import { changeToBlock, changeToNone, changeFooterToBlock, changeFooterToNone } from "../../actions/changeDisplay";
 
 export class Login extends Component {
     constructor(props) {
@@ -11,6 +13,10 @@ export class Login extends Component {
             data: {}
         }
     }
+    async componentDidMount() {
+        await changeToNone();
+        await changeFooterToNone()
+    }
     async handleClick() {
         const { data } = this.state;
         if (data) {
@@ -18,12 +24,14 @@ export class Login extends Component {
                 try {
                     var result = await login(data)
                     console.log(result)
-                    setToken('token');
+                    localStorage.setItem('userInfo', JSON.stringify(result.data))
+                    setToken('token', result.data.bindings[0].tokenJsonStr, { expires: 7 });
                     Toast.success('登录成功')
                     this.props.history.push({
                         pathname: '/'
                     })
-                    // window.location.reload();
+                    await changeToBlock();
+                    await changeFooterToBlock();
                 } catch (error) {
                     if (error.response) {
                         console.log(error.response.data);
@@ -74,5 +82,8 @@ export class Login extends Component {
         )
     }
 }
+const mapStateToProps = (state) => {
+    return state.LoggedReducer;
+}
 
-export default Login
+export default connect(mapStateToProps)(Login)

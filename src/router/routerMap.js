@@ -5,6 +5,7 @@ import Video from '../pages/Video';
 import Tuijian from "../pages/songList/Tuijian";
 import songListDetail from "../pages/songList/Detail";
 import CatList from "../pages/songList/CatList";
+import Search from "../pages/Search";
 // import Login from '../pages/login/Login';
 // import LoginByPhone from "../pages/login/LoginByPhone";
 
@@ -18,4 +19,5 @@ export default [
     { path: "/tuijian", component: Tuijian, name: 'Tuijian' },
     { path: "/songlistdetail/:id", component: songListDetail, name: 'songListDetail' },
     { path: "/catlist", component: CatList, name: 'CatList' },
+    { path: "/search", component: Search, name: 'Search' },
 ]

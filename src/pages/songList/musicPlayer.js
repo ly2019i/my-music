@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { getMusicUrl } from "../../serveices/getTuijian";
 import { connect } from 'react-redux';
+import { Icon } from 'antd';
+import imgUrl from "../../static/music.png";
 
 export class musicPlayer extends Component {
     constructor(props) {
@@ -24,34 +26,42 @@ export class musicPlayer extends Component {
             mp3url: result.data.data[0].url,
         })
     }
-    async componentWillReceiveProps(nextProps) {
-        if (nextProps.datas.length !== 0) {
-            this.startPlay(nextProps.datas[this.state.index].id)
-            await this.setState({
-                data: nextProps.datas[this.state.index].al,
-                name: nextProps.datas[this.state.index].name,
-                index: this.state.index += 1,
-            })
-            //  监听上一首歌播放完毕
-            this.refs.playOne.onended = async () => {
-                this.startPlay(nextProps.datas[this.state.index].id)
-                await this.setState({
-                    data: nextProps.datas[this.state.index].al,
-                    name: nextProps.datas[this.state.index].name,
-                    index: this.state.index += 1,
-                })
-            };
-        }
-    }
     async componentDidUpdate(prevState) {
-        if (this.props.data !== prevState.data) {
+        if (this.props.data !== prevState.data || this.props.datas !== prevState.datas) {
             //  切歌的时候如果当前的秒数不为0就重置为0
             this.resetSecond()
             await this.setState({
                 data: this.props.data,
-                name: this.props.data.name
+                name: this.props.data.name,
+                datas: this.props.datas
             })
-            this.startPlay(this.props.data.id)
+            console.log(this.props)
+            const { data, datas } = this.state;
+            if (data.id) {
+                var index = datas.findIndex(item => item.id === data.id)
+                this.startPlay(datas[index].id)
+                await this.setState({
+                    data: datas[index].al,
+                    name: datas[index].name,
+                    index: index + 1,
+                })
+            } else {
+                this.startPlay(datas[0].id)
+                await this.setState({
+                    data: datas[0].al,
+                    name: datas[0].name,
+                    index: this.state.index + 1,
+                })
+            }
+            this.refs.playOne.onended = async () => {
+                console.log(this.state.index)
+                this.startPlay(datas[this.state.index].id)
+                await this.setState({
+                    data: datas[this.state.index].al,
+                    name: datas[this.state.index].name,
+                    index: this.state.index += 1,
+                })
+            };
         }
     }
     startPlay(id) {
@@ -81,7 +91,7 @@ export class musicPlayer extends Component {
         this.TimeSpan = setInterval(async () => {
             var audio = refs;
             //  进度条
-            var ProcessNow = (audio.currentTime / audio.duration) * 260;
+            var ProcessNow = (audio.currentTime / audio.duration) * 200;
             this.refs.ProcessNow.style.width = ProcessNow + 'px';
             //  设置秒数加1
             await this.setState({
@@ -135,13 +145,15 @@ export class musicPlayer extends Component {
                 await this.setState({
                     data: this.props.datas[this.state.index - 2].al,
                     name: this.props.datas[this.state.index - 2].name,
-                    index: this.state.index,
+                    index: this.state.index - 1,
                 })
                 this.resetSecond()
             }
         }
     }
     async next() {
+        console.log(this.props)
+        console.log(this.state.index)
         if (this.props.datas.length > 1) {
             if (this.state.index !== this.props.datas.length - 1) {
                 this.startPlay(this.props.datas[this.state.index].id)
@@ -155,7 +167,7 @@ export class musicPlayer extends Component {
         }
     }
     render() {
-        const { data, name } = this.state;
+        const { datas, index, name, data } = this.state;
         var { minute, second, fen, miao } = this.state;
         minute = minute >= 10 ? minute : "0" + minute;
         second = second >= 10 ? second : "0" + second;
@@ -164,16 +176,18 @@ export class musicPlayer extends Component {
         return (
             <div className="musicPlayer" >
                 <p>当前正在播放：{name}</p>
-                <img src={data.picUrl} alt={name} style={{ width: '0.8rem' }} />
-                <i onClick={() => this.previous()}>上一首</i>
-                <i onClick={() => this.play()}>播放</i>
-                <i onClick={() => this.pause()}> 暂停</i>
-                <i onClick={() => this.next()}>下一首</i>
+                <img src={data.picUrl ? data.picUrl : imgUrl} alt={name} className="playNow" />
+                <i onClick={() => this.previous()}><Icon type="fast-backward" style={{ fontSize: '0.5rem' }} /></i>
+                <i onClick={() => this.play()}><Icon type="caret-right" style={{ fontSize: '0.5rem' }} /></i>
+                <i onClick={() => this.pause()}><Icon type="pause" style={{ fontSize: '0.5rem' }} /></i>
+                <i onClick={() => this.next()}><Icon type="fast-forward" style={{ fontSize: '0.5rem' }} /></i>
                 <audio ref="playOne" autoPlay="autoplay" src={this.state.mp3url}></audio>
                 <div className="Process" ref="Process">
-                    <div className="ProcessAll" ref="ProcessAll"></div>
-                    <div className="ProcessNow" ref="ProcessNow"></div>
                     <div className="SongTime" ref="SongTime" dangerouslySetInnerHTML={{ __html: `${minute}:${second}` }}></div>
+                    <div className="progress">
+                        <div className="ProcessAll" ref="ProcessAll"></div>
+                        <div className="ProcessNow" ref="ProcessNow"></div>
+                    </div>
                     <div className="SongTime" ref="SongTime" dangerouslySetInnerHTML={{ __html: `${fen}:${miao}` }}></div>
                 </div>
             </div >

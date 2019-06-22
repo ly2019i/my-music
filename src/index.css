@@ -48,7 +48,8 @@ body {
   overflow: auto;
 }
 .footer {
-  height: 1rem;
+  z-index: 1;
+  height: 2rem;
   background: #cecece;
 }
 .user img {
@@ -200,10 +201,15 @@ body {
 }
 
 .Process {
-  margin-top: 15px;
+  display: flex;
+  justify-content: space-around;
+}
+.progress {
+  margin: 0.2rem;
+  width: 200px;
 }
 .ProcessAll {
-  width: 260px;
+  width: 200px;
   float: left;
   height: 3px;
   cursor: pointer;
@@ -217,7 +223,23 @@ body {
   cursor: pointer;
   background-color: #f06d6a;
 }
-.SongTime {
+.playNow {
+  width: 0.8rem;
   float: left;
-  display: inline-block;
+  margin: 0;
+  padding: 0;
+  border-radius: 50%;
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  -ms-border-radius: 50%;
+  -o-border-radius: 50%;
+  animation: rotation 3s linear infinite;
+  -moz-animation: rotation 3s linear infinite;
+  -webkit-animation: rotation 3s linear infinite;
+  -o-animation: rotation 3s linear infinite;
+}
+.nickname {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }

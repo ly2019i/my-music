@@ -3,16 +3,31 @@ import { withRouter } from 'react-router-dom';
 import { Drawer, List, Icon, Card, WingBlank, WhiteSpace } from 'antd-mobile';
 import 'antd-mobile/dist/antd-mobile.css';
 import "../index.css";
-import imgUrl from "../static/avatar.jpg";
 import CardImg from "../static/music.png";
+import store from '../Store';
 class Header extends Component {
     state = {
-        open: false
+        open: false,
+        imgUrl: '',
+        nickname: '',
     };
-    onOpenChange = (...args) => {
-        this.setState({ open: !this.state.open });
+    onOpenChange = async (...args) => {
+        await this.setState({ open: !this.state.open });
+        store.dispatch({
+            type: 'changeOpen',
+            payload: {
+                open: this.state.open
+            }
+        })
     }
-    componentDidMount() {
+    async componentDidMount() {
+        const userInfo = JSON.parse(localStorage.getItem('userInfo'));
+        const imgUrl = userInfo.profile.avatarUrl
+        await this.setState({
+            imgUrl: imgUrl,
+            nickname: userInfo.profile.nickname,
+        })
+        console.log(userInfo)
     }
     render() {
         const sidebar = (<List style={{ width: '6rem' }}>
@@ -22,9 +37,9 @@ class Header extends Component {
                         <WhiteSpace size="lg" />
                         <Card full className="user">
                             <Card.Header
-                                thumb={imgUrl}
+                                thumb={this.state.imgUrl}
                             />
-                            <Card.Footer content="小明" extra={<div>lv9<span>签到</span></div>} />
+                            <Card.Footer content={<i className="nickname">{this.state.nickname}</i>} extra={<div>lv9<span>签到</span></div>} />
                         </Card>
                         <WhiteSpace size="lg" />
                     </WingBlank>)
