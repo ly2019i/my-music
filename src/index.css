@@ -246,3 +246,6 @@ body {
 .searchHeader {
   position: relative;
 }
+.searchList {
+  overflow: auto;
+}

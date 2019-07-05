@@ -4,6 +4,7 @@ import LoggedReducer from '../src/reducers/Logged';
 import getMusicIdReducer from "../src/reducers/musicId";
 import sideBarReducer from "../src/reducers/sidebar";
 import FooterDisplayReducer from "../src/reducers/Display";
+import FromDetailReducer from "../src/reducers/FromDetail";
 
 
 // 合并reducer
@@ -12,6 +13,7 @@ const routerReducer = combineReducers({
     getMusicIdReducer,
     sideBarReducer,
     FooterDisplayReducer,
+    FromDetailReducer,
 })
 
 export default createStore(

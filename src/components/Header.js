@@ -29,6 +29,12 @@ class Header extends Component {
         })
         console.log(userInfo)
     }
+    search() {
+        this.props.history.push({
+            pathname: '/search'
+        })
+        console.log('aa')
+    }
     render() {
         const sidebar = (<List style={{ width: '6rem' }}>
             {['演出', '商城', '附近的人', '口袋铃声', '定时停止播放', '扫一扫', '音乐闹钟', '音乐云盘', '在线听歌免流量', '游戏推荐', '优惠券', '加入网易音乐人', '我要直播22'].map((i, index) => {
@@ -60,7 +66,7 @@ class Header extends Component {
                     <li onClick={() => this.props.history.push({ pathname: '/friend' })}>朋友</li>
                     <li onClick={() => this.props.history.push({ pathname: '/video' })}>视频</li>
                 </ul>
-                <Icon key="2" type="search" style={{ margin: '0.2rem' }} />
+                <Icon key="2" type="search" style={{ margin: '0.2rem', zIndex: 1 }} onClick={() => this.search()} />
                 <Drawer
                     className="my-drawer"
                     sidebar={sidebar}

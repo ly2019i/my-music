@@ -73,6 +73,21 @@ export class songListDetail extends Component {
         this.props.history.push({
             pathname: '/search'
         })
+        console.log(this.state.tracks)
+        var datas = [];
+        this.state.tracks.forEach((item, index) => {
+            datas[index] = {};
+            datas[index].al = item.al;
+            datas[index].id = item.id;
+            datas[index].name = item.name
+        });
+        store.dispatch({
+            type: 'fromDetail',
+            payload: {
+                fromDetail: true,
+                datas,
+            }
+        })
     }
     render() {
         const { songListDetail, tracks } = this.state;
